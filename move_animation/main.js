@@ -13,6 +13,21 @@ const pos = {
     y:0
 }
 
+let obj = document.querySelector('.obj');
+let obj2 = document.querySelector('.obj2');
+const container = document.querySelector('.cont');
+const planet = document.querySelector('.planet');
+
+posObj = {
+    x: obj.offsetLeft,
+    y: obj.offsetTop
+}
+
+posObj2 = {
+    x: obj2.offsetLeft,
+    y: obj2.offsetTop
+}
+
 let inter = null;
 
 document.body.addEventListener('mousemove', mousemove);
@@ -60,11 +75,14 @@ function mouseup(ev) {
 }
 
 function mousedown(ev) {
-    middle.y = document.body.offsetHeight / 2;
-    middle.x = document.body.offsetWidth / 2;
-    par.isDown = true;
-    if(inter == null){
-        inter = setInterval(go, 100);
+    ev.buttons == 2? eat():0;
+    if(ev.buttons == 1){
+        middle.y = document.body.offsetHeight / 2;
+        middle.x = document.body.offsetWidth / 2;
+        par.isDown = true;
+        if(inter == null){
+            inter = setInterval(go, 100);
+        }
     }
 }
 
@@ -85,17 +103,66 @@ function mouseenterBody(ev) {
 function go() {
     if (par.isDown) {
         if(par.x > middle.x){
-            pos.x-= 10;
+            pos.x-= 15;
+            posObj.x-= 15;
+            posObj2.x-= 15;
         }else if(par.x < middle.x){
-            pos.x+= 10;
+            pos.x+= 15;
+            posObj.x+= 15;
+            posObj2.x+= 15;
         };
         if(par.y > middle.y){
-            pos.y-= 10;
+            pos.y-= 15;
+            posObj.y-= 15;
+            posObj2.y-= 15;
         }else if(par.y < middle.y){
-            pos.y+= 10;
+            pos.y+= 15;
+            posObj.y+= 15;
+            posObj2.y+= 15;
+
         };
         document.body.style.backgroundPosition = `${pos.x}px ${pos.y}px`;
+        // obj.style.left = `${posObj.x}px`;
+        // obj.style.top = `${posObj.y}px`;
+        // obj2.style.left = `${posObj2.x}px`;
+        // obj2.style.top = `${posObj2.y}px`;
+        // obj.style.transform = `translate(${pos.x}pt,${pos.y}pt)`;
     }
+    // if((posObj.x + 25) > (middle.x - 100)&&
+    // (posObj.y + 25) > (middle.y - 100)&&
+    // (posObj.x + 25) < (middle.x + 100)&&
+    // (posObj.y + 25)<(middle.y + 100)){
+    //     gravity(obj, 75);
+    // }
+    // if((posObj2.x + 25) > (middle.x - 100)&&
+    // (posObj2.y + 25) > (middle.y - 100)&&
+    // (posObj2.x + 25) < (middle.x + 100)&&
+    // (posObj2.y + 25)<(middle.y + 100)){
+    //     gravity2(obj2, 95);
+    // }
+
+}
+
+function eat(){
+    let childrens = planet.children;
+    for (let key of childrens){
+        key.classList.toggle(`food${key.id}`);
+        console.log(key);
+    };
+}
+
+function gravity(ob, distance){
+    planet.append(ob);
+    obj.style.left = `${distance}px`;
+    obj.style.top = `${distance}px`;
+    obj = 0;
+}
+
+function gravity2(ob, distance){
+    planet.append(ob);
+    obj.style.left = `${distance}px`;
+    obj.style.top = `${distance}px`;
+    obj2 = 0;
 }
 
 
@@ -182,7 +249,7 @@ function go() {
 // }
 
 
-//TODO fix 'diagonal-key-up-stop' bug(if 2 keys down, and 1 from this keys up, object stoped)
+
 //TODO realize arrow keys
 //TODO realize fading effect to move
 //TODO rewrite code at MVC structure
