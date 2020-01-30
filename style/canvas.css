@@ -1,0 +1,79 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+canvas{
+    position: fixed;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    border: 1px solid red;
+    z-index: -1;
+    background-color: #050818;
+    border: 5px solid #050818;
+}
+
+.cont{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* background: radial-gradient(red, yellow); */
+    z-index: 100;
+    position: absolute;
+    left: calc(50% - 25px);
+    top: calc(50% - 25px);
+    border: 1px solid red;
+}
+
+.planet{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    /* background: radial-gradient(red, yellow); */
+    background: red;
+    position: relative;
+    /* animation: myAn 3s linear infinite; */
+}
+
+@keyframes myAn {
+    from{
+        transform:rotate(0);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+.obj{
+    position: absolute;
+    left: -75px;
+    top: 75px;
+    width: 50px;
+    height: 50px;
+    background-color: burlywood;
+    /* -webkit-transition:all 1s ease-out;  
+    -moz-transition:all 1s ease-out;  
+    -o-transition:all 1s ease-out;  
+    transition:all 1s ease-out;  */
+}
+
+.obj2{
+    position: absolute;
+    left: 100px;
+    top: 100px;
+    width: 50px;
+    height: 50px;
+    background-color: burlywood;
+    /* -webkit-transition:all 1s ease-out;  
+    -moz-transition:all 1s ease-out;  
+    -o-transition:all 1s ease-out;  
+    transition:all 1s ease-out;  */
+}
