@@ -41,8 +41,6 @@ export class StarsController {
     }
 
     go() {
-        // this.model.ticker? this.model.ticker = false : this.model.ticker = true;
-        // this.model.ticker ? this.view.clear(this.model.width, this.model.height):0;
         this.view.clear(this.model.width, this.model.height)
         this.model.stars.forEach((el, i) => {
             if (el.x > this.model.width) {
@@ -58,16 +56,16 @@ export class StarsController {
                 this.model.replaceStar(i, this.view.drawStar(this.model.getOptions(this.model.width, this.model.height, 1, this.model.height - 1)));
             }
             if (this.model.direction.evX > this.model.middle.x) {
-                el.x -= this.model.direction.x;
+                el.x -= this.model.direction.x * el.radius;
             } else if (this.model.direction.evX < this.model.middle.x) {
-                el.x += this.model.direction.x;
+                el.x += this.model.direction.x * el.radius;
             };
             if (this.model.direction.evY > this.model.middle.y) {
-                el.y -= this.model.direction.y;
+                el.y -= this.model.direction.y * el.radius;
             } else if (this.model.direction.evY < this.model.middle.y) {
-                el.y += this.model.direction.y;
+                el.y += this.model.direction.y * el.radius;
             };
-            el.draw(this.model.move);
+            el.draw();
         });
         this.view.go(this.go.bind(this),this.model.move);
     }

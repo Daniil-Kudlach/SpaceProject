@@ -9,30 +9,32 @@ export class StarsModel {
         this.middle = {};
         this.direction = {};
         this.move = false;
-        this.interval = 1000;
-        this.ticker = false;
+        this.speedDivider = 200;
     }
-    
-    setMove(){
+
+    setMove() {
         this.move = true;
     }
 
-    stop(){
+    stop() {
         this.move = false;
     }
 
-    changeDirection(ev){
+    changeDirection(ev) {
         this.direction.evX = ev.x;
-        this.direction.evY  = ev.y;
-        this.direction.x = Math.abs(ev.x - this.middle.x) / 150;
-        this.direction.y = Math.abs(ev.y - this.middle.y) / 150;
+        this.direction.evY = ev.y;
+        this.direction.x = Math.abs(ev.x - this.middle.x) / this.speedDivider;
+        this.direction.y = Math.abs(ev.y - this.middle.y) / this.speedDivider;
     }
     addStar(star) {
         this.stars.push(star);
     }
 
-    getMiddle(){
-        this.middle = {x:this.width / 2, y:this.height/2};
+    getMiddle() {
+        this.middle = {
+            x: this.width / 2,
+            y: this.height / 2
+        };
     }
 
     replaceStar(i, star) {
@@ -51,7 +53,7 @@ export class StarsModel {
     }
 
     getStarCount() {
-        return (this.width / 80) * (this.height / 80);
+        return (this.width / 100) * (this.height / 100);
     }
 
     resize(size) {
