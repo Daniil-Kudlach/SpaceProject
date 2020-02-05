@@ -40,34 +40,14 @@ export class StarsController {
         this.view.stop();
     }
 
-    go() {
-        this.view.clear(this.model.width, this.model.height)
+    go(time) {
+        this.view.go(this.go.bind(this),this.model.move);
+        this.view.clear(this.model.width, this.model.height);
         this.model.stars.forEach((el, i) => {
-            if (el.x > this.model.width) {
-                this.model.replaceStar(i, this.view.drawStar(this.model.getOptions(1, this.model.height)));
-            }
-            if (el.y > this.model.height) {
-                this.model.replaceStar(i, this.view.drawStar(this.model.getOptions(this.model.width, 1)));
-            }
-            if (el.x < 0) {
-                this.model.replaceStar(i, this.view.drawStar(this.model.getOptions(this.model.width, 1, this.model.width - 1, this.model.height)));
-            }
-            if (el.y < 0) {
-                this.model.replaceStar(i, this.view.drawStar(this.model.getOptions(this.model.width, this.model.height, 1, this.model.height - 1)));
-            }
-            if (this.model.direction.evX > this.model.middle.x) {
-                el.x -= this.model.direction.x * el.radius;
-            } else if (this.model.direction.evX < this.model.middle.x) {
-                el.x += this.model.direction.x * el.radius;
-            };
-            if (this.model.direction.evY > this.model.middle.y) {
-                el.y -= this.model.direction.y * el.radius;
-            } else if (this.model.direction.evY < this.model.middle.y) {
-                el.y += this.model.direction.y * el.radius;
-            };
+            let replace = this.model.go(el,time);
+            replace? this.model.replaceStar(i, this.view.drawStar(replace)):0;
             el.draw();
         });
-        this.view.go(this.go.bind(this),this.model.move);
     }
 
     init() {
