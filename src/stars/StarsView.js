@@ -4,17 +4,12 @@ export class StarsView {
         this.ctx = canvas.getContext("2d");
         this.inter;
         this.timeout;
-        this.requestAnimationFrame = window.requestAnimationFrame || 
-                                    window.mozRequestAnimationFrame ||
-                                    window.webkitRequestAnimationFrame || 
-                                    window.msRequestAnimationFrame;
-        this.cancelAnimationFrame = window.cancelAnimationFrame || 
-                                    window.mozCancelAnimationFrame;
-    }
-
-    addListeners(lsnr) {
-        window.addEventListener("DOMContentLoaded", lsnr.resize);
-        window.addEventListener("resize", lsnr.resize);
+        this.requestAnimationFrame = window.requestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.msRequestAnimationFrame;
+        this.cancelAnimationFrame = window.cancelAnimationFrame ||
+            window.mozCancelAnimationFrame;
     }
 
     clear(w, h) {
@@ -22,16 +17,20 @@ export class StarsView {
     }
 
     go(fnc) {
-        this.timeout = setTimeout(()=>{
-            this.inter = requestAnimationFrame(fnc);
-        },50);
+        if (this.inter) {
+            clearTimeout(this.timeout);
+            this.timeout = false;
+            cancelAnimationFrame(this.inter);
+            this.inter = false;
+        }
+        this.timeout = setTimeout(() => {
+            this.inter = requestAnimationFrame(fnc, this.canvas);
+        }, 50)
     }
 
     stop() {
-        cancelAnimationFrame(this.inter);
-        clearTimeout(this.timeout);
-        this.timeout = false;
-        this.inter = false;
+        // cancelAnimationFrame(this.inter, this.canvas);
+        // this.inter = false;
     }
 
     drawStar(star) {
