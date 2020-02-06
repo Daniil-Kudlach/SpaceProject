@@ -23,7 +23,7 @@ export class StarsModel {
     }
 
     easeOut(){
-        !this.move?this.speedDivider +=1:0;
+        !this.move?this.speedDivider +=10:0;
     }
 
     go(el){
@@ -93,9 +93,7 @@ export class StarsModel {
             radius: this.minRadius + Math.random() * (this.maxRadius - this.minRadius),
             color: this.colors[this.random(0, this.colors.length)],
             start: 0,
-            end: (Math.PI * 2),
-            xGo:0,
-            yGo:0
+            end: (Math.PI * 2)
         }
     }
 
