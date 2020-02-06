@@ -9,10 +9,21 @@ export class ObjectController{
         this.view = new ObjectView();
         this.model = new ObjectModel();
         this.subscribe('changeDirection', this.changeDirection.bind(this));
+        this.subscribe('go', this.go.bind(this));
+        this.subscribe('init', this.init.bind(this))
+
     }
 
     changeDirection(ev){
-        console.log(ev);
+        this.model.changeDirection();
+    }
+
+    go(ev){
+        this.view.go();
+    }
+
+    init(ev){
+        this.view.init(ev);
     }
 
 }
