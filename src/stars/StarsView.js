@@ -16,6 +16,10 @@ export class StarsView {
         this.ctx.clearRect(0, 0, w, h);
     }
 
+    getCanvas() {
+        return [this.canvas, this.ctx];
+    }
+
     go(fnc) {
         if (this.inter) {
             clearTimeout(this.timeout);
@@ -38,6 +42,8 @@ export class StarsView {
             this.ctx.beginPath();
             this.ctx.arc(star.x, star.y, star.radius, star.start, star.end, true);
             this.ctx.fillStyle = star.color;
+            this.ctx.shadowColor = star.color;
+            this.ctx.shadowBlur = 5;
             this.ctx.fill();
             this.ctx.closePath();
         }
