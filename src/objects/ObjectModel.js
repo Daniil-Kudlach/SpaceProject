@@ -1,22 +1,13 @@
 export class ObjectModel{
-    constructor(){
-        this.src;
-        this.speed = {min:1,max:10};
+    constructor(param){
+        this.object = {};
     }
 
-    setSrc(src){
-        this.src = src;
-    }
+    getOptions(name,){    }
 
-    getOptions(){
-        return {
-            src:this.src,
-            speed:this.speed,
+    changeDirection(){}
 
+    random(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
         }
-    }
-
-    random(){
-
-    }
 }
