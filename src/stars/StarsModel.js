@@ -9,17 +9,21 @@ export class StarsModel {
         this.middle = {};
         this.direction = {};
         this.move = false;
-        this.speedDivider = 100;
+        this.speedDivider = 190;
         this.frequence = 150; 
     }
 
     setMove() {
         this.move = true;
+        this.speedDivider = 190;
     }
 
     stop() {
-
         this.move = false;
+    }
+
+    easeOut(){
+        !this.move?this.speedDivider +=1:0;
     }
 
     go(el){
@@ -36,27 +40,43 @@ export class StarsModel {
             return this.getOptions(this.width, this.height, 1, this.height - 1);
         }
         if (this.direction.evX > this.middle.x) {
-            el.x -= this.direction.x * el.radius;
+            el.x -= this.direction.x * el.radius / this.speedDivider;
         } else if (this.direction.evX < this.middle.x) {
-            el.x += this.direction.x * el.radius;
+            el.x += this.direction.x * el.radius / this.speedDivider;
         }
         if (this.direction.evY > this.middle.y) {
-            el.y -= this.direction.y * el.radius;
+            el.y -= this.direction.y * el.radius / this.speedDivider;
         } else if (this.direction.evY < this.middle.y) {
-            el.y += this.direction.y * el.radius;
+            el.y += this.direction.y * el.radius / this.speedDivider;
         }
+    }
+
+    getSpeed(){
+        return [this.direction,this.speedDivider];
     }
 
     changeDirection(ev) {
         if(this.move){
             this.direction.evX = ev.x;
             this.direction.evY = ev.y;
-            this.direction.x = Math.abs(ev.x - this.middle.x) / this.speedDivider;
-            this.direction.y = Math.abs(ev.y - this.middle.y) / this.speedDivider;
+            this.direction.x = Math.abs(ev.x - this.middle.x);
+            this.direction.y = Math.abs(ev.y - this.middle.y);
+            return this.direction;
+        }else{
+            return false;
         }
     }
+
     addStar(star) {
         this.stars.push(star);
+    }
+
+    replaceStar(i, star) {
+        this.stars.splice(i, 1, star);
+    }
+
+    getStarCount() {
+        return (this.width / this.frequence) * (this.height / this.frequence);
     }
 
     getMiddle() {
@@ -66,10 +86,6 @@ export class StarsModel {
         };
     }
 
-    replaceStar(i, star) {
-        this.stars.splice(i, 1, star);
-    }
-
     getOptions(w = this.width, h = this.height, mw = 1, mh = 1) {
         return {
             x: this.random(mw, w),
@@ -77,15 +93,11 @@ export class StarsModel {
             radius: this.minRadius + Math.random() * (this.maxRadius - this.minRadius),
             color: this.colors[this.random(0, this.colors.length)],
             start: 0,
-            end: (Math.PI * 2)
+            end: (Math.PI * 2),
+            xGo:0,
+            yGo:0
         }
     }
-
-    getStarCount() {
-        return (this.width / this.frequence) * (this.height / this.frequence);
-    }
-
-    
 
     resize(size) {
         this.stars = [];

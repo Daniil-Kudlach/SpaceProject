@@ -15,6 +15,8 @@ export class StarsController {
         this.model = new StarsModel();
         this.view = new StarsView();
         this.init();
+        this.subscribe('load', this.init.bind(this));
+        this.subscribe('resize', this.init.bind(this));
         this.subscribe('mousemove', this.changeDirection.bind(this));
         this.subscribe('mousedown', this.move.bind(this));
         this.subscribe('mousedown', this.changeDirection.bind(this));
@@ -32,7 +34,11 @@ export class StarsController {
     }
 
     changeDirection(ev) {
-        this.model.changeDirection(ev);
+        this.getDirection(this.model.changeDirection(ev));
+    }
+
+    getDirection(direction){
+        direction?this.notify('changeDirection', direction):0;
     }
 
     stop() {
@@ -41,20 +47,18 @@ export class StarsController {
     }
 
     go(time) {
-        this.view.go(this.go.bind(this),this.model.move);
         this.view.clear(this.model.width, this.model.height);
+        this.model.getSpeed();
         this.model.stars.forEach((el, i) => {
-            let replace = this.model.go(el,time);
+            let replace = this.model.go(el);
             replace? this.model.replaceStar(i, this.view.drawStar(replace)):0;
             el.draw();
         });
+        this.model.easeOut();
+        this.view.go(this.go.bind(this));
     }
 
-    init() {
-        this.view.addListeners(this.getListeners());
-    }
-
-    resize() {
+    init() {        
         this.model.resize(this.view.getSize());
         this.model.getMiddle();
         this.view.clear(this.model.width, this.model.height);
@@ -62,12 +66,6 @@ export class StarsController {
         for (let i = 0; i < count; i++) {
             this.model.addStar(this.view.drawStar(this.model.getOptions()));
             this.model.stars[i].draw();
-        }
-    }
-
-    getListeners() {
-        return {
-            resize: this.resize.bind(this)
         }
     }
 }

@@ -7,7 +7,6 @@ export class Publisher {
         if (!this.subscribes.hasOwnProperty(eventName)) { 
             this.subscribes[eventName] = [];
         }
-
         this.subscribes[eventName].push(func); 
     }
 
