@@ -12,6 +12,8 @@ export class MoveAnimationsView{
         this.aLis(this.b,'mouseleave',this.lsnr.mouseleave);
         this.aLis(this.b,'mouseenter',this.lsnr.mouseenter);
         this.aLis(this.b,'mouseup',this.lsnr.mouseup);
+        this.aLis(window,'DOMContentLoaded',this.lsnr.load);
+        this.aLis(window,'resize',this.lsnr.resize);
     }
 
     aLis(el,ev,lsnr){
