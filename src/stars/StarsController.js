@@ -48,7 +48,6 @@ export class StarsController {
 
     go(time) {
         this.view.clear(this.model.width, this.model.height);
-        this.model.getSpeed();
         this.model.stars.forEach((el, i) => {
             let replace = this.model.go(el);
             replace? this.model.replaceStar(i, this.view.drawStar(replace)):0;
@@ -56,6 +55,7 @@ export class StarsController {
         });
         this.model.easeOut();
         this.view.go(this.go.bind(this));
+        this.notify('go',this.model.getSpeed());
     }
 
     init() {        
@@ -67,5 +67,6 @@ export class StarsController {
             this.model.addStar(this.view.drawStar(this.model.getOptions()));
             this.model.stars[i].draw();
         }
+        this.notify('init', this.view.getCanvas());
     }
 }
