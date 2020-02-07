@@ -1,22 +1,61 @@
-export class MoveAnimationsView{
-    constructor(lsnr){
-        this.b = document.body;
-        this.container = document.querySelector('.cont');
-        this.lsnr = lsnr;
-        this.addListener();
+export class MoveAnimationsView {
+    constructor() {
+        this.canvas = document.querySelector("#canvas");
+        this.ctx = canvas.getContext("2d");
+        this.inter;
+        this.timeout;
+        this.requestAnimationFrame = window.requestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.msRequestAnimationFrame;
+        this.cancelAnimationFrame = window.cancelAnimationFrame ||
+            window.mozCancelAnimationFrame;
     }
 
-    addListener(){
-        this.aLis(this.b,'mousemove',this.lsnr.mousemove);
-        this.aLis(this.b,'mousedown',this.lsnr.mousedown);
-        this.aLis(this.b,'mouseleave',this.lsnr.mouseleave);
-        this.aLis(this.b,'mouseenter',this.lsnr.mouseenter);
-        this.aLis(this.b,'mouseup',this.lsnr.mouseup);
-        this.aLis(window,'DOMContentLoaded',this.lsnr.load);
-        this.aLis(window,'resize',this.lsnr.resize);
+    clear(w, h) {
+        this.ctx.clearRect(0, 0, w, h);
     }
 
-    aLis(el,ev,lsnr){
-        el.addEventListener(ev,lsnr);
+    getCanvas() {
+        return this.ctx;
+    }
+
+    go(fnc) {
+        if (this.inter) {
+            clearTimeout(this.timeout);
+            this.timeout = false;
+            cancelAnimationFrame(this.inter);
+            this.inter = false;
+        }
+        this.timeout = setTimeout(() => {
+            this.inter = requestAnimationFrame(fnc, this.canvas);
+        }, 50)
+    }
+
+    stop() {
+        cancelAnimationFrame(this.inter, this.canvas);
+        this.inter = false;
+    }
+
+    drawStar(star) {
+        star.draw = (layer) => {
+            this.ctx.beginPath();
+            this.ctx.arc(star.x, star.y, star.radius, star.start, star.end, true);
+            this.ctx.fillStyle = star.color;
+            this.ctx.shadowColor = star.color;
+            this.ctx.shadowBlur = 15;
+            this.ctx.fill();
+            this.ctx.closePath();
+        }
+        return star;
+    }
+
+    getParam() {
+        return {
+            w: this.canvas.width = window.innerWidth,
+            h: this.canvas.height = window.innerHeight,
+            c: this.canvas,
+            ctx: this.ctx
+        }
     }
 }

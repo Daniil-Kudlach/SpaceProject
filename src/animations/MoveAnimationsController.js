@@ -13,46 +13,44 @@ export class MoveAnimationsController {
         this.subscribe = subscribe;
         this.notify = notify;
         this.model = new MoveAnimationsModel();
-        this.view = new MoveAnimationsView(this.getListeners());
+        this.view = new MoveAnimationsView();
+        this.subscribe('load', this.init.bind(this));
+        this.subscribe('resize', this.init.bind(this));
+        this.subscribe('mousemove', this.changeDirection.bind(this));
+        this.subscribe('mousedown', this.move.bind(this));
+        this.subscribe('mousedown', this.changeDirection.bind(this));
+        this.subscribe('mouseup', this.stop.bind(this));
+        this.subscribe('mouseleave', this.stop.bind(this));
     }
 
-    mousemove(ev) {
-        this.notify('mousemove', ev);
-    }
-
-    mouseup(ev) {
-        this.notify('mouseup', ev);
-    }
-
-    mousedown(ev) {
-        this.notify('mousedown', ev);
-    }
-
-    mouseleave(ev) {
-        this.notify('mouseleave', ev);
-    }
-
-    mouseenter(ev) {
-        this.notify('mouseenter', ev);
-    }
-
-    load(ev) {
-        this.notify('load', ev);
-    }
-
-    resize(ev) {
-        this.notify('resize', ev);
-    }
-
-    getListeners() {
-        return {
-            mousedown: this.mousedown.bind(this),
-            mouseup: this.mouseup.bind(this),
-            mousemove: this.mousemove.bind(this),
-            mouseenter: this.mouseenter.bind(this),
-            mouseleave: this.mouseleave.bind(this),
-            load: this.load.bind(this),
-            resize: this.resize.bind(this)
+    move(ev) {
+        if(ev.buttons == 1){
+            this.model.setMove();
+            this.view.go(this.go.bind(this),this.model.move);
+        } else {
+            return;
         }
+    }
+
+    changeDirection(ev) {
+        this.model.changeDirection(ev);
+    }
+
+    stop() {
+        this.model.stop();
+        // this.view.stop();
+    }
+
+    go() {
+        this.view.clear(this.model.width, this.model.height);
+        this.model.easeOut();
+        this.view.go(this.go.bind(this));
+        this.notify('go',this.model.getSpeed(),this.view.getCanvas());
+    }
+
+    init() {        
+        this.view.clear(this.model.width, this.model.height);
+        this.notify('init',this.model.resize(this.view.getParam()));
+        this.model.getMiddle();
     }
 }
