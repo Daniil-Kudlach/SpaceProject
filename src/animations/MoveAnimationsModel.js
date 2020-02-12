@@ -5,12 +5,12 @@ export class MoveAnimationsModel {
         this.middle = {};
         this.direction = {};
         this.move = false;
-        this.speedDivider = 190;
+        this.speedDivider = 300;
     }
 
     setMove() {
         this.move = true;
-        this.speedDivider = 190;
+        this.speedDivider = 300;
     }
 
     stop() {
@@ -18,7 +18,7 @@ export class MoveAnimationsModel {
     }
 
     easeOut(){
-        !this.move?this.speedDivider +=10:0;
+        !this.move?this.speedDivider +=1:0;
     }
 
     getSpeed(){
@@ -27,7 +27,7 @@ export class MoveAnimationsModel {
             h:this.height,
             m:this.middle,
             dir:this.direction,
-            div:this.speedDivider,
+            div:this.speedDivider
         };
     }
 
@@ -35,8 +35,8 @@ export class MoveAnimationsModel {
         if(this.move){
             this.direction.evX = ev.x;
             this.direction.evY = ev.y;
-            this.direction.x = Math.abs(ev.x - this.middle.x);
-            this.direction.y = Math.abs(ev.y - this.middle.y);
+            this.direction.x = ev.x - this.middle.x;
+            this.direction.y = ev.y - this.middle.y;
             return this.direction;
         }else{
             return false;
