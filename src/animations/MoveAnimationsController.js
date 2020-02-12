@@ -15,7 +15,7 @@ export class MoveAnimationsController {
         this.model = new MoveAnimationsModel();
         this.view = new MoveAnimationsView();
         this.subscribe('load', this.init.bind(this));
-        this.subscribe('resize', this.init.bind(this));
+        this.subscribe('resize', this.resize.bind(this));
         this.subscribe('mousemove', this.changeDirection.bind(this));
         this.subscribe('mousedown', this.move.bind(this));
         this.subscribe('mousedown', this.changeDirection.bind(this));
@@ -38,7 +38,6 @@ export class MoveAnimationsController {
 
     stop() {
         this.model.stop();
-        // this.view.stop();
     }
 
     go() {
@@ -48,9 +47,16 @@ export class MoveAnimationsController {
         this.notify('go',this.model.getSpeed(),this.view.getCanvas());
     }
 
+    resize(){
+        this.view.clear(this.model.width, this.model.height);
+        this.notify('changeSize',this.model.resize(this.view.getParam()));
+        this.model.getMiddle();
+    }
+
     init() {        
         this.view.clear(this.model.width, this.model.height);
         this.notify('init',this.model.resize(this.view.getParam()));
         this.model.getMiddle();
+        this.go();
     }
 }
