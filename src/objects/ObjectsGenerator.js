@@ -10,13 +10,8 @@ export class ObjectsGenerator {
         this.notify = notify;
         this.subscribe = subscribe;
         this.objs = [];
+        this.m;
         this.user;
-        this.danger = {
-            x: 0,
-            y: 0,
-            fX: 0,
-            fY: 0
-        }
         this.m = {};
         this.src = [
             'Aster',
@@ -39,7 +34,7 @@ export class ObjectsGenerator {
 
     getUserParam() {
         return {
-            mass: 1,
+            mass: 6,
             x: this.m.x,
             y: this.m.y,
             dir: {
@@ -59,10 +54,6 @@ export class ObjectsGenerator {
             w: param.w,
             h: param.h
         }
-        this.danger.x = this.m.x - this.user.img.width;
-        this.danger.y = this.m.y - this.user.img.height;
-        this.danger.fX = this.m.x + this.user.img.width;
-        this.danger.fY = this.m.y + this.user.img.height;
         this.user.x = this.m.x - this.user.img.width / 2;
         this.user.y = this.m.y - this.user.img.height / 2;
         this.objs.forEach((el) => {
@@ -78,12 +69,8 @@ export class ObjectsGenerator {
             h: param.h
         }
         this.user = new ObjectTemplate(param.ctx, this.getUserParam(param));
-        this.danger.x = this.m.x - this.user.img.width;
-        this.danger.y = this.m.y - this.user.img.height;
-        this.danger.fX = this.m.x + this.user.img.width;
-        this.danger.fY = this.m.y + this.user.img.height;
         if (this.objs.length == 0) {
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
                 let a = new ObjectTemplate(param.ctx, this.getParam(param), i);
                 this.objs.push(a);
             }
@@ -91,56 +78,47 @@ export class ObjectsGenerator {
         this.objs.push(this.user);
     }
 
-    getParam(param) {
-        let m = this.random(1, 11);
+    getParam() {
+        let m = this.random(1, 5);
         return {
             mass: m,
             src: this.src,
-            x: Math.random() > 0.5 ? this.random(1, 2900) * -1 : this.random(1, 2900),
-            y: Math.random() > 0.5 ? this.random(1, 2900) * -1 : this.random(1, 2900),
+            x: Math.random() > 0.5 ? this.random(1, 3000) * -1 : this.random(1, 3000),
+            y: Math.random() > 0.5 ? this.random(1, 3000) * -1 : this.random(1, 3000),
             dir: {
-                x: Math.random() > 0.5 ? Math.random() * -1 : Math.random(),
-                y: Math.random() > 0.5 ? Math.random() * -1 : Math.random()
+                x: Math.random() > 0.5 ? Math.random() * -1 : Math.random() * 1,
+                y: Math.random() > 0.5 ? Math.random() * -1 : Math.random() * 1
             },
             m: this.m,
             moving: true
         }
     }
 
-    randSrc() {
-        if (Math.random() > 0.9) {
-            return this.src[0];
-        } else {
-            return this.src[this.random(1, this.src.length - 1)];
-        }
-    }
-
     go(ev) {
         this.objs.forEach((el, i) => {
-            el.x < -2999 ? el.x = 2999 : 0;
-            el.y < -2999 ? el.y = 2999 : 0;
-            el.x > 2999 ? el.x = -2999 : 0;
-            el.y > 2999 ? el.y = -2999 : 0;
-            if (el.x < -100 || el.y < -100 || el.x > this.m.w + 100 || el.y > this.m.h + 100) {
-                el.changePosition(ev);
-            } else {
-                el.draw(ev);
+            if(!el.orb){
+                el.x < -4999 ? el.x = 4000 : 0;
+                el.y < -4999 ? el.y = 4000 : 0;
+                el.x > 4999 ? el.x = -4000 : 0;
+                el.y > 4999 ? el.y = -4000 : 0;
             }
+            el.draw(ev);
             this.filt(el, i);
         });
-        this.user.draw()
     }
 
     filt(el, i) {
-        this.objs.filter((e, j) => {
-            if (i == j) {
-                return false;
-            } else {
-                this.collisionCheck(e, el);
-            }
-        }).forEach((e) => {
-            this.checkSize(e, el);
-        });
+        if(el.collision){
+            return;
+        }else{
+            this.objs.forEach((e, j) => {
+                if (i == j || e.collision) {
+                    return;
+                } else {
+                    this.collisionCheck(e, el);
+                }
+            });
+        }
     }
 
     collisionCheck(objA, objB) {
@@ -148,23 +126,29 @@ export class ObjectsGenerator {
         let squareY = Math.pow(Math.abs(objA.y - objB.y), 2);
         let hypothenuse = Math.sqrt(squareX + squareY);
         let distance = hypothenuse - objA.halfWidth - objB.halfWidth;
-        if (distance <= 2) {
+        if (distance <= 0) {
+            objA.collision = true;
+            objB.collision = true;
+            if (objA.mass == objB.mass) {
+                objA.minusMass(objB.mass);
+                objB.minusMass(objA.mass);
+                objA.shadow('orange');
+                objB.shadow('orange');
+                objA !== this.user? objA.newPosition(-10000):0;
+                objB !== this.user? objB.newPosition(-10000):0;
+                objA.collision = false;
+                objB.collision = false;
+                return;
+            }else if (objA.mass > objB.mass) {
+                objB == this.user?objB.minusMass(objA.mass):objA.court(objB);
+                return;
+            } else if (objA.mass < objB.mass) {
+                objA == this.user?objA.minusMass(objB.mass):objB.court(objA);
+                return;
+            }  
             return true
         } else {
             return false
-        }
-    }
-
-    checkSize(objA, objB) {
-        if (objA.mass > objB.mass) {
-            objA.court(objB);
-        } else if (objA.mass < objB.mass) {
-            objB.court(objA);
-        } else if (objA.mass == objB.mass) {
-            objA.dir.x * -1;
-            objB.dir.y * -1;
-            objA.dir.y * -1;
-            objB.dir.x * -1;
         }
     }
 
