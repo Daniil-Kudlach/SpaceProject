@@ -2,6 +2,8 @@ export class ObjectTemplate {
     constructor(ctx, param) {
         this.type = param.src[param.mass - 1];
         this.src = param.src;
+        this.isUser = param.isUser || false;
+        this.notify = param.notify || false;
         this.mass = param.mass;
         this.percent = 0;
         this.collision = false;
@@ -52,7 +54,7 @@ export class ObjectTemplate {
             this.ctx.save();
             this.ctx.translate(this.parent.x, this.parent.y); //вращение вокруг центра
             this.ctx.rotate((this.degree += this.rotationSpeed));
-            this.ctx.drawImage(this.img, this.orb - this.halfWidth, this.orb- this.halfWidth, this.img.width, this.img.height);
+            this.ctx.drawImage(this.img, this.orb - this.halfWidth, this.orb - this.halfWidth, this.img.width, this.img.height);
             this.ctx.beginPath();
             this.ctx.moveTo(this.orb, this.orb);
             this.ctx.arc(this.orb, this.orb, this.halfWidth, 0, this.PI);
@@ -70,7 +72,7 @@ export class ObjectTemplate {
     court(obj) {
         if (this.mass <= 5) {
             this.addMass(obj.mass);
-            obj.newPosition(Math.random() * 10000, Math.random() * 10000);
+            obj.newPosition(-10000, -10000);
             this.collision = false;
             this.shadow('orange');
         } else if (this.mass <= 7 && this.mass > 5) {
@@ -84,13 +86,13 @@ export class ObjectTemplate {
             }
             this.collision = false;
         } else if (this.mass <= 11 && this.mass > 7) {
-            if (obj.mass <= 5) {
-                obj.orbit(this)
+            if (obj.mass > 5) {
+                obj.orbit(this);
                 this.addChild(obj);
                 this.shadow('orange');
             } else {
-                this.addMass(obj.mass);
-                obj.newPosition(Math.random() * 10000, Math.random() * 10000);
+                this.minusMass(obj.mass);
+                obj.newPosition(-10000, -10000);
                 this.shadow('orange');
             }
             this.collision = false;
@@ -107,22 +109,28 @@ export class ObjectTemplate {
         return;
     }
 
+    clearChild() {
+        this.child.forEach(e => this.eat(e));
+    }
+
     evolution(type) {
         this.type = this.src[type];
         this.img = new Image();
         this.img.src = `../../../img/${this.type}.png`;
         this.img.onload = () => {
             this.loadImg();
-            if(this.child.length > 0){this.child.forEach((e)=>{this.eat(e)})};
+            if (this.child.length > 0) {
+                this.clearChild();
+            }
         }
         this.blur = true;
         return;
     }
 
-    minusMass(mass) {
-        this.moving ? console.log(this.mass) : 0;
-        this.mass > 2 ? this.percent -= mass : 0;
-        if (this.percent < 0) {
+    minusMass(m) {
+        this.percent -= m;
+        this.isUser?this.notify('changeMass',this.percent):0;
+        if (this.percent <= 0) {
             this.mass -= 1;
             this.checkMass();
             this.percent = 0;
@@ -130,9 +138,10 @@ export class ObjectTemplate {
         return;
     }
 
-    addMass(mass) {
-        this.percent += mass / this.mass;
-        if (this.percent >= 100) {
+    addMass(m) {
+        this.isUser?this.notify('changeMass',this.percent):0;
+        this.percent += m/ this.mass;
+        if (this.percent >= 20) {
             this.mass += 1;
             this.checkMass();
             this.percent = 0;
@@ -141,51 +150,60 @@ export class ObjectTemplate {
     }
 
     checkMass() {
-        if (this.mass > 0 && this.mass < 2) {
+        if (this.mass <= 0) {
+            if (this.isUser) {
+                this.isUser ? console.log('gameover') : 0;
+                this.notify('gameover', this);
+            } else {
+                this.newPosition(-10000, -10000);
+            }
+        } else if (this.mass == 1) {
             this.evolution(0);
             this.shadow('green');
             return;
-        } else if (this.mass >= 2 && this.mass < 3) {
+        } else if (this.mass == 2) {
             this.evolution(1);
             this.shadow('green');
             return;
-        } else if (this.mass >= 3 && this.mass < 4) {
+        } else if (this.mass == 3) {
             this.evolution(2);
             this.shadow('green');
             return;
-        } else if (this.mass >= 4 && this.mass < 5) {
+        } else if (this.mass == 4) {
             this.evolution(3);
             this.shadow('green');
             return;
-        } else if (this.mass >= 5 && this.mass < 6) {
+        } else if (this.mass == 5) {
             this.evolution(4);
             this.shadow('green');
             return;
-        } else if (this.mass >= 6 && this.mass < 7) {
+        } else if (this.mass == 6) {
             this.evolution(5);
             this.shadow('green');
             return;
-        } else if (this.mass >= 7 && this.mass < 8) {
+        } else if (this.mass == 7) {
             this.evolution(6);
             this.shadow('green');
             return;
-        } else if (this.mass >= 8 && this.mass < 9) {
+        } else if (this.mass == 8) {
             this.evolution(7);
             this.shadow('green');
             return;
-        } else if (this.mass >= 9 && this.mass < 10) {
+        } else if (this.mass == 9) {
             this.evolution(8);
             this.shadow('green');
             return;
-        } else if (this.mass >= 10 && this.mass < 11) {
+        } else if (this.mass == 10) {
             this.evolution(9);
             this.shadow('green');
             return;
-        } else if (this.mass >= 11) {
+        } else if (this.mass == 11) {
             this.evolution(10);
             this.shadow('green');
             return;
-        } else {
+        } else if (this.mass > 11) {
+            console.log(this, this.mass);
+            this.blackHole();
             return;
         }
     }
@@ -197,25 +215,29 @@ export class ObjectTemplate {
     }
 
     orbit(parent) {
-        this.orb = this.img.width * 4;
+        this.orb = this.img.width * 3 - this.rotationSpeed;
+        this.child.length > 0 ? this.clearChild() : 0;
         this.parent = parent;
         return;
     }
 
     newPosition(x, y) {
-        if (!this.orb) {
-            this.x = x;
-            this.y = y;
-            this.draw();
+        if (this.child.length > 0) {
+            this.clearChild();
         }
+        this.x = x;
+        this.y = y;
+        this.draw();
         return;
     }
 
     changePosition(par) {
-        this.x -= par.dir.x * (this.speed / par.div) + this.dir.x;
-        this.y -= par.dir.y * (this.speed / par.div) + this.dir.y;
-        this.center.x = this.halfWidth + this.x;
-        this.center.y = this.halfWidth + this.y;
+        if (this.moving && !this.orb) {
+            this.x -= par.dir.x * (this.speed / par.div) + this.dir.x;
+            this.y -= par.dir.y * (this.speed / par.div) + this.dir.y;
+            this.center.x = this.halfWidth + this.x;
+            this.center.y = this.halfWidth + this.y;
+        }
         return;
     }
 
