@@ -20,7 +20,8 @@ body{
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
     background-image: url('../img/Space-Texture-1.jpg');
     background-repeat: no-repeat;
@@ -47,7 +48,7 @@ canvas{
     align-items: center;
 }
 
-.btn{
+.btnWrapper{
     width: 80%;
     height: 20%;
     display: flex;
@@ -57,7 +58,7 @@ canvas{
     color: white;
 }
 
-.btn span{
+.btnWrapper span{
     border: 1px solid #050818;
     padding: 5px;
     user-select: none;
@@ -66,17 +67,51 @@ canvas{
     background-color: #05081879;
 }
 
-.btn span:hover{
+.btnWrapper span:hover{
     transform: scale(1.1);
     background-color: #05081879;
     text-shadow: 0 0 5px white;
     box-shadow: 0 0 10px 5px #050818;
 }
-.btn span:active{
+.btnWrapper span:active{
     transform: scale(.9);
     box-shadow: inset 0 0 10px 5px #050818;
 }
 
 .hidden{
     display: none;
+    z-index: -10;
+}
+
+.gameover {
+    z-index: 10;
+    font-size: 20pt;
+    color: white;
+}
+
+.panel{
+    position: absolute;
+    z-index: -1;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mass-loader{
+    display: inline-block;
+    height: 90%;
+    width: 200px;
+    height: 16px;
+    border: 2px solid white;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+.panel span{
+    color: white;
+    font-weight: bold;
 }
