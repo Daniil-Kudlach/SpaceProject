@@ -12,6 +12,14 @@ export class EventsProcessingController {
         this.view = new EventsProcessingView(this.getListeners());
     }
 
+    keydown(ev){
+        this.notify('keydown', ev);
+    }
+
+    keyup(ev){
+        this.notify('keyup', ev);
+    }
+
     mousemove(ev) {
         this.notify('mousemove', ev);
     }
@@ -48,7 +56,9 @@ export class EventsProcessingController {
             mouseenter: this.mouseenter.bind(this),
             mouseleave: this.mouseleave.bind(this),
             load: this.load.bind(this),
-            resize: this.resize.bind(this)
+            resize: this.resize.bind(this),
+            keydown: this.keydown.bind(this),
+            keyup: this.keydown.bind(this)
         }
     }
 }
