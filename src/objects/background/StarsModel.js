@@ -4,7 +4,7 @@ export class StarsModel{
         this.minRadius = 0.4;
         this.maxRadius = 1.9;
         this.colors = ["rgba(255, 255, 255, 0.9)", "rgba(252, 244, 201, 0.9)", "rgba(201, 252, 201, 0.9)", "rgba(201, 236, 252, 0.9)", "rgba(229, 201, 252, 0.9)", "rgba(252, 201, 201, 0.9)", "rgba(252, 201, 241, 0.9)", "rgba(252, 201, 201, 0.9)"];
-        this.frequence = 80; 
+        this.frequence = 100; 
         this.end = Math.PI * 2;
     }
 
