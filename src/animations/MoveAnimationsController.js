@@ -21,6 +21,8 @@ export class MoveAnimationsController {
         this.subscribe('mousedown', this.changeDirection.bind(this));
         this.subscribe('mouseup', this.stop.bind(this));
         this.subscribe('mouseleave', this.stop.bind(this));
+        this.subscribe('new-game', this.init.bind(this));
+        this.subscribe('gameover', this.gameover.bind(this));
     }
 
     move(ev) {
@@ -38,6 +40,11 @@ export class MoveAnimationsController {
 
     stop() {
         this.model.stop();
+    }
+
+    gameover(){
+        this.stop();
+        this.view.stop();
     }
 
     go() {
