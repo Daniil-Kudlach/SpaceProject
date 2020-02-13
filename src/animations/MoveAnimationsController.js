@@ -57,6 +57,5 @@ export class MoveAnimationsController {
         this.view.clear(this.model.width, this.model.height);
         this.notify('init',this.model.resize(this.view.getParam()));
         this.model.getMiddle();
-        this.go();
     }
 }

@@ -18,7 +18,7 @@ export class MoveAnimationsModel {
     }
 
     easeOut(){
-        !this.move?this.speedDivider +=1:0;
+        !this.move?this.speedDivider +=.5:0;
     }
 
     getSpeed(){
