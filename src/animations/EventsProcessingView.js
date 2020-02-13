@@ -12,6 +12,8 @@ export class EventsProcessingView{
         this.aLis(this.b,'mouseleave',this.lsnr.mouseleave);
         this.aLis(this.b,'mouseenter',this.lsnr.mouseenter);
         this.aLis(this.b,'mouseup',this.lsnr.mouseup);
+        this.aLis(this.b,'keydown', this.lsnr.keydown);
+        this.aLis(this.b,'keyup', this.aLis.keyup);
         this.aLis(window,'DOMContentLoaded',this.lsnr.load);
         this.aLis(window,'resize',this.lsnr.resize);
     }
