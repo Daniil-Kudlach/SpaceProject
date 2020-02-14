@@ -126,7 +126,7 @@ export class ObjectTemplate {
     evolution(type) {
         this.type = this.src[type];
         this.img = new Image();
-        this.img.src = `../../../img/${this.type}.png`;
+        this.img.src = `/img/${this.type}.png`;
         this.img.onload = () => {
             this.loadImg();
             if (this.child.length > 0) {
