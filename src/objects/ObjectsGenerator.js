@@ -12,8 +12,6 @@ export class ObjectsGenerator {
         this.w;
         this.h;
         this.objs = [];
-        this.user;
-        this.m = {};
         this.src = [
             'Aster',
             'AsterMid',
@@ -30,71 +28,45 @@ export class ObjectsGenerator {
         ];
         this.subscribe('init', this.init.bind(this));
         this.subscribe('go', this.go.bind(this));
-        this.subscribe('changeSize', this.resize.bind(this));
-        this.subscribe('keydown', this.keydown.bind(this));
-    }
-
-    keydown(ev) {
-        if (ev.code == 'Space') {
-            this.user.child.length > 0 ? this.user.clearChild() : 0;
-        }
     }
 
     getUserParam() {
         return {
             mass: 1,
-            x: this.m.x,
-            y: this.m.y,
+            x: this.w / 2,
+            y: this.h / 2,
             dir: {
                 x: 0,
                 y: 0
             },
-            m: this.m,
             moving: false,
             src: this.src,
             isUser: true,
             notify: this.notify,
-            date: new Date().getMilliseconds()
+            subscribe: this.subscribe
         }
     }
 
     resize(param) {
         this.w = param.w;
         this.h = param.h;
-        this.m = {
-            x: param.w / 2,
-            y: param.h / 2,
-            w: param.w,
-            h: param.h
-        }
-        this.user.x = this.m.x - this.user.img.width / 2;
-        this.user.y = this.m.y - this.user.img.height / 2;
-        this.objs.forEach((el) => {
-            el.changeMiddle(this.m);
-        });
     }
 
     init(param) {
+        this.objs = [];
         this.w = param.w;
         this.h = param.h;
-        this.m = {
-            x: param.w / 2,
-            y: param.h / 2,
-            w: param.w,
-            h: param.h
-        }
-        this.user = new ObjectTemplate(param.ctx, this.getUserParam(param));
         if (this.objs.length == 0) {
-            for (let i = 0; i < 600; i++) {
+            this.objs.push(new ObjectTemplate(param.ctx, this.getUserParam(param)));
+            for (let i = 0; i < 500; i++) {
                 let a = new ObjectTemplate(param.ctx, this.getParam(param), i);
                 this.objs.push(a);
             }
-            this.objs.push(this.user);
         }
     }
 
     getParam() {
-        let m = this.random(1, 3);
+        let m = this.random(1, 4);
         return {
             mass: m,
             src: this.src,
@@ -151,32 +123,22 @@ export class ObjectsGenerator {
             if (objA.mass == objB.mass) {
                 objA.shadow('red');
                 objB.shadow('red');
-                if (objA.percent > objB.percent) {
-                    objB.isUser ? objA.newPosition(-10000, -10000) : objB.newPosition(-999, -999);
+                objA.isUser ? 0 : objA.newPosition(3000, -1000);
+                objB.isUser ? 0 : objB.newPosition(-999, 2999);
+                if (objA.mass <= 2) {
                     objA.addMass(objB.mass);
-                    objA.collision = false;
-                    objB.collision = false;
-                    return;
-                } else if (objB.percent > objA.percent) {
-                    objA.isUser ? objB.newPosition(-10000, -10000) : objA.newPosition(-10000, -10000);
-                    objB.addMass(objA.mass);
-                    objA.collision = false;
-                    objB.collision = false;
-                    return;
+                    objA.addMass(objB.mass);
                 } else {
-                    objA.isUser ? 0 : objA.newPosition(-10000, -10000);
-                    objB.isUser ? 0 : objB.newPosition(-999, -999);
-                    objA.addMass(objB.mass);
-                    objA.addMass(objB.mass);
-                    objA.collision = false;
-                    objB.collision = false;
-                    return;
+                    objA.minusMass(objB.mass);
+                    objA.minusMass(objB.mass);
                 }
+                objA.collision = false;
+                objB.collision = false;
                 return;
             } else if (objA.mass > objB.mass) {
                 if (objB.isUser) {
                     objB.minusMass(objA.mass);
-                    objA.newPosition(-10000, -10000)
+                    objA.newPosition(-500, 1000)
                     objA.collision = false;
                     objB.collision = false;
                     return;
@@ -187,7 +149,7 @@ export class ObjectsGenerator {
             } else if (objA.mass < objB.mass) {
                 if (objA.isUser) {
                     objA.minusMass(objB.mass);
-                    objB.newPosition(-10000, -10000)
+                    objB.newPosition(1999, -999)
                     objA.collision = false;
                     objB.collision = false;
                     return;
@@ -195,15 +157,13 @@ export class ObjectsGenerator {
                     objB.court(objA);
                 }
                 return;
-            } 
-        }else {
-        return false;
+            }
+        } else {
+            return false;
+        }
     }
 
-}
-
-random(min = 0, max = 1) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
+    random(min = 0, max = 1) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
 }

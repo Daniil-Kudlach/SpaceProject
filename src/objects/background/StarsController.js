@@ -11,7 +11,10 @@ export class StarsController {
         subscribe
     }) {
         this.notify = notify;
-        this.p={x:0,y:0}
+        this.p = {
+            x: 0,
+            y: 0
+        }
         this.subscribe = subscribe;
         this.view = new StarsView();
         this.model = new StarsModel();
@@ -20,10 +23,10 @@ export class StarsController {
         this.subscribe('changeSize', this.init.bind(this));
     }
 
-    go(param) {        
+    go(param) {
         this.model.stars.forEach((el, i) => {
             this.model.go(el, param);
-            el.show?el.draw():0;
+            el.show ? el.draw() : 0;
         });
     }
 

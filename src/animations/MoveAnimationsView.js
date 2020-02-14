@@ -2,8 +2,8 @@ export class MoveAnimationsView {
     constructor() {
         this.canvas = document.querySelector("#canvas");
         this.ctx = canvas.getContext("2d");
-        this.ctx.imageSmoothingEnabled = true;
-        this.inter  = true;
+        this.ctx.imageSmoothingEnabled = false;
+        this.inter = true;
         this.requestAnimationFrame = window.requestAnimationFrame ||
             window.mozRequestAnimationFrame ||
             window.webkitRequestAnimationFrame ||

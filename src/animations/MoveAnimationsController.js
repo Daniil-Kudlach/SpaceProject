@@ -21,16 +21,17 @@ export class MoveAnimationsController {
         this.subscribe('mousedown', this.changeDirection.bind(this));
         this.subscribe('mouseup', this.stop.bind(this));
         this.subscribe('mouseleave', this.stop.bind(this));
-        this.subscribe('new-game', this.init.bind(this));
         this.subscribe('gameover', this.gameover.bind(this));
     }
 
     move(ev) {
-        if(ev.buttons == 1){
-            this.model.setMove();
-            this.view.go(this.go.bind(this),this.model.move);
-        } else {
-            return;
+        if (!(ev.target.classList[0] == 'mute')) {
+            if (ev.buttons == 1) {
+                this.model.setMove();
+                this.view.go(this.go.bind(this), this.model.move);
+            } else {
+                return;
+            }
         }
     }
 
@@ -42,27 +43,27 @@ export class MoveAnimationsController {
         this.model.stop();
     }
 
-    gameover(){
+    gameover() {
         this.stop();
         this.view.stop();
     }
 
-    go() {
+    go(ev) {
         this.view.clear(this.model.width, this.model.height);
         this.model.easeOut();
         this.view.go(this.go.bind(this));
-        this.notify('go',this.model.getSpeed(),this.view.getCanvas());
+        this.notify('go', this.model.getSpeed(), this.view.getCanvas());
     }
 
-    resize(){
+    resize() {
         this.view.clear(this.model.width, this.model.height);
-        this.notify('changeSize',this.model.resize(this.view.getParam()));
+        this.notify('changeSize', this.model.resize(this.view.getParam()));
         this.model.getMiddle();
     }
 
-    init() {        
+    init() {
         this.view.clear(this.model.width, this.model.height);
-        this.notify('init',this.model.resize(this.view.getParam()));
+        this.notify('init', this.model.resize(this.view.getParam()));
         this.model.getMiddle();
     }
 }

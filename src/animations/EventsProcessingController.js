@@ -10,13 +10,18 @@ export class EventsProcessingController {
         this.subscribe = subscribe;
         this.notify = notify;
         this.view = new EventsProcessingView(this.getListeners());
+        this.notify('new-game', this.newGame.bind(this));
     }
 
-    keydown(ev){
+    newGame(){
+        this.view = new EventsProcessingView(this.getListeners());
+    }
+
+    keydown(ev) {
         this.notify('keydown', ev);
     }
 
-    keyup(ev){
+    keyup(ev) {
         this.notify('keyup', ev);
     }
 

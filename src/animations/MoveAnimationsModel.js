@@ -5,40 +5,40 @@ export class MoveAnimationsModel {
         this.middle = {};
         this.direction = {};
         this.move = false;
-        this.speedDivider = 300;
+        this.speedDivider = 500;
     }
 
     setMove() {
         this.move = true;
-        this.speedDivider = 300;
+        this.speedDivider = 500;
     }
 
     stop() {
         this.move = false;
     }
 
-    easeOut(){
-        !this.move?this.speedDivider +=.5:0;
+    easeOut() {
+        !this.move ? this.speedDivider += .5 : 0;
     }
 
-    getSpeed(){
+    getSpeed() {
         return {
-            w:this.width,
-            h:this.height,
-            m:this.middle,
-            dir:this.direction,
-            div:this.speedDivider
+            w: this.width,
+            h: this.height,
+            m: this.middle,
+            dir: this.direction,
+            div: this.speedDivider
         };
     }
 
     changeDirection(ev) {
-        if(this.move){
+        if (this.move) {
             this.direction.evX = ev.x;
             this.direction.evY = ev.y;
             this.direction.x = ev.x - this.middle.x;
             this.direction.y = ev.y - this.middle.y;
             return this.direction;
-        }else{
+        } else {
             return false;
         }
     }
