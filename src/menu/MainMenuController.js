@@ -1,42 +1,55 @@
-import { MainMenuView } from "./MainMenuView.js";
-import { MainMenuModel } from "./MainMenuModel.js";
+import {
+    MainMenuView
+} from "./MainMenuView.js";
+import {
+    MainMenuModel
+} from "./MainMenuModel.js";
 
-export class MainMenuController{
-    constructor({subscribe, notify}){
+export class MainMenuController {
+    constructor({
+        subscribe,
+        notify
+    }) {
         this.subscribe = subscribe;
         this.notify = notify;
-        this.subscribe('load', this.init.bind(this));
+        // this.subscribe('load', this.init.bind(this));
         this.subscribe('gameover', this.gameover.bind(this));
         this.subscribe('changeMass', this.changeMass.bind(this));
         this.view = new MainMenuView(this.getListeners());
         this.model = new MainMenuModel();
+        this.init();
     }
 
-    init(){
+    init() {
         this.view.init();
-        this.model.init();
     }
 
-    changeMass(ev){
+    changeMass(ev) {
         this.view.changeMass(this.model.changeMass(ev));
     }
 
-    gameover(){
+    gameover() {
         this.view.gameover();
-        this.model.gameover();
     }
 
-    click(ev){
-        console.log(ev);
-        this.notify(ev.target.classList[1], ev);
+    showMenu(){
+        this.view.showMenu();
+    }
+
+    click(ev) {
         this.view.startGame();
+        this.notify('new-game', ev);
     }
 
-    getListeners(){
+    mute() {
+        this.view.muteOnOff();
+    }
+
+    getListeners() {
         return {
-            click:this.click.bind(this)
+            click: this.click.bind(this),
+            mute: this.mute.bind(this),
+            showMenu: this.showMenu.bind(this)
         }
     }
-
-
 }
