@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    user-select: none;
 }
 
 body{
@@ -20,13 +21,30 @@ body{
     width: 100%;
     height: 100%;
     display: flex;
+    z-index: 1000;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background-image: url('../img/Space-Texture-1.jpg');
+    background-image: url('../img/fog2.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+}
+
+.mute{
+    width:20px;
+    height:20px;
+    border-radius: 5px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color:white;
+    z-index:10000;
+    background-image: url(../img/volume.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto;
+    cursor: pointer;
 }
 
 canvas{
@@ -38,6 +56,37 @@ canvas{
     background-color: transparent;
     z-index: -2;
 }
+
+.modal{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    left: 0;
+    top:0;
+    background-color: #0508187c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 100000;
+}
+
+.btnGameOver{
+    border: 1px solid white;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.btnGameOver:hover{
+    background-color: white;
+    color: #0508187c;
+    cursor: pointer;
+
+}
+
+
 
 .menu{
     width: 100%;
@@ -72,15 +121,29 @@ canvas{
     background-color: #05081879;
     text-shadow: 0 0 5px white;
     box-shadow: 0 0 10px 5px #050818;
+    cursor: pointer;
 }
 .btnWrapper span:active{
     transform: scale(.9);
     box-shadow: inset 0 0 10px 5px #050818;
 }
 
+.muteClick{
+    background-image: url('../img/mute.svg');
+}
+
 .hidden{
     display: none;
     z-index: -10;
+}
+
+.disable{
+    opacity: .4;
+}
+
+.disable span:hover{
+    opacity: .3;
+    cursor: not-allowed;
 }
 
 .gameover {
