@@ -12,7 +12,7 @@ export class ObjectTemplate {
         this.parent;
         this.ctx = ctx;
         this.img = new Image();
-        this.img.src = `../../../img/${this.type}.png`;
+        this.img.src = `./img/${this.type}.png`;
         this.dir = {
             x: param.dir.x,
             y: param.dir.y

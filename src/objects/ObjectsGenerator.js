@@ -32,7 +32,7 @@ export class ObjectsGenerator {
 
     getUserParam() {
         return {
-            mass: 1,
+            mass: 6,
             x: this.w / 2,
             y: this.h / 2,
             dir: {
@@ -66,7 +66,7 @@ export class ObjectsGenerator {
     }
 
     getParam() {
-        let m = this.random(1, 4);
+        let m = this.random(1, 9);
         return {
             mass: m,
             src: this.src,
